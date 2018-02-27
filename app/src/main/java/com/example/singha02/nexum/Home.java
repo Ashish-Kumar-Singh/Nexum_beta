@@ -10,6 +10,11 @@ import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
+import android.support.v7.widget.Toolbar;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,14 +26,25 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 
-public class Home extends FragmentActivity implements OnMapReadyCallback {
+public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private DrawerLayout mdrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+    private Toolbar mtoolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_main);
+        mdrawerLayout= (DrawerLayout) findViewById(R.id.drawerlayout);
+        mToggle= new ActionBarDrawerToggle(this,mdrawerLayout,R.string.open,R.string.close);
+        mdrawerLayout.addDrawerListener(mToggle);
+        mtoolbar= (Toolbar) findViewById(R.id.navbar);
+        setSupportActionBar(mtoolbar);
+        mToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -141,5 +157,14 @@ public class Home extends FragmentActivity implements OnMapReadyCallback {
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(mToggle.onOptionsItemSelected(item)){
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
